@@ -11,7 +11,7 @@ using PaymentAPI.Context;
 
 namespace payment_API.Migrations
 {
-    [DbContext(typeof(OrganizadorContext))]
+    [DbContext(typeof(PaymentContext))]
     [Migration("20250514121431_NewTables")]
     partial class NewTables
     {

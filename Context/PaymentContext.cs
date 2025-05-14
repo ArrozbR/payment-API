@@ -3,9 +3,9 @@ using PaymentAPI.Models;
 
 namespace PaymentAPI.Context
 {
-    public class OrganizadorContext : DbContext
+    public class PaymentContext : DbContext
     {
-        public OrganizadorContext(DbContextOptions<OrganizadorContext> options) : base(options)
+        public PaymentContext(DbContextOptions<PaymentContext> options) : base(options)
         {
             
         }

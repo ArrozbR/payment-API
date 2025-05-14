@@ -10,7 +10,7 @@ using PaymentAPI.Context;
 
 namespace payment_API.Migrations
 {
-    [DbContext(typeof(OrganizadorContext))]
+    [DbContext(typeof(PaymentContext))]
     partial class OrganizadorContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

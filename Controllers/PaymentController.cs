@@ -3,14 +3,21 @@ using Microsoft.AspNetCore.Mvc;
 using PaymentAPI.Context;
 using PaymentAPI.Models;
 
-namespace TrilhaApiDesafio.Controllers{
+namespace PaymentAPI.Controllers{
     [ApiController]
     [Route("[controller]")]
-    public class TarefaController : ControllerBase{
-        private readonly OrganizadorContext _context;
+    public class PaymentController : ControllerBase{
+        private readonly PaymentContext _context;
 
-        public TarefaController(OrganizadorContext context){
+        public PaymentController(PaymentContext context){
             _context = context;
+        }
+
+        [HttpPost]
+        public IActionResult CeateAcquisition(Acquisition acquisition){
+            _context.Acquisition.Add(acquisition);
+            _context.SaveChanges();
+            return Ok(acquisition);
         }
     }
 }

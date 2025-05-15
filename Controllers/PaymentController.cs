@@ -6,16 +6,19 @@ using PaymentAPI.Models;
 namespace PaymentAPI.Controllers{
     [ApiController]
     [Route("[controller]")]
-    public class PaymentController : ControllerBase{
+    public class PaymentController : ControllerBase
+    {
         private readonly PaymentContext _context;
 
-        public PaymentController(PaymentContext context){
+        public PaymentController(PaymentContext context)
+        {
             _context = context;
         }
 
         [HttpPost("NewTransaction")]
-        public IActionResult CeateAcquisition(Acquisition acquisition){
-            if(acquisition.Status == null) acquisition.Status = "Awaiting Payment";
+        public IActionResult CeateAcquisition(Acquisition acquisition)
+        {
+            if (acquisition.Status == null) acquisition.Status = "Awaiting Payment";
             acquisition.Date = DateTime.Now;
             _context.Acquisition.Add(acquisition);
             _context.SaveChanges();
@@ -23,24 +26,27 @@ namespace PaymentAPI.Controllers{
         }
 
         [HttpPost("NewVendor")]
-        public IActionResult CeateVendor(Vendor vendor){
+        public IActionResult CeateVendor(Vendor vendor)
+        {
             _context.Vendor.Add(vendor);
             _context.SaveChanges();
             return Ok(vendor);
         }
 
         [HttpGet("GetTransaction/{id}")]
-        public IActionResult GetTransaction(int id){
+        public IActionResult GetTransaction(int id)
+        {
             var transactionDatabase = _context.Acquisition.Find(id);
-            if(transactionDatabase == null) return NotFound();
+            if (transactionDatabase == null) return NotFound();
             return Ok(transactionDatabase);
         }
 
         [HttpPut("ModifyTransaction/{id}")]
-        public IActionResult ModifyTransaction(int id, Acquisition acquisition){
+        public IActionResult ModifyTransaction(int id, Acquisition acquisition)
+        {
             var transactionDatabase = _context.Acquisition.Find(id);
-            if(transactionDatabase == null) return NotFound();
-            if(transactionDatabase.Status != "Awaiting Payment") return BadRequest();
+            if (transactionDatabase == null) return NotFound();
+            if (transactionDatabase.Status != "Awaiting Payment") return BadRequest();
             transactionDatabase.Itens = acquisition.Itens;
             _context.Acquisition.Update(transactionDatabase);
             _context.SaveChanges();
@@ -48,11 +54,12 @@ namespace PaymentAPI.Controllers{
         }
 
         [HttpPut("CancelTransaction/{id}")]
-        public IActionResult CancelTransaction(int id){
+        public IActionResult CancelTransaction(int id)
+        {
             var transactionDatabase = _context.Acquisition.Find(id);
-            if(transactionDatabase == null) return NotFound();
-            if(transactionDatabase.Status == "Sent to Carrier") return BadRequest();
-            if(transactionDatabase.Status == "Delivered") return BadRequest();
+            if (transactionDatabase == null) return NotFound();
+            if (transactionDatabase.Status == "Sent to Carrier") return BadRequest();
+            if (transactionDatabase.Status == "Delivered") return BadRequest();
             transactionDatabase.Status = "Canceled";
             _context.Acquisition.Update(transactionDatabase);
             _context.SaveChanges();
@@ -60,26 +67,48 @@ namespace PaymentAPI.Controllers{
         }
 
         [HttpPut("UpdateTransaction/{id}")]
-        public IActionResult UpdateTransaction(int id){
+        public IActionResult UpdateTransaction(int id)
+        {
             var transactionDatabase = _context.Acquisition.Find(id);
-            if(transactionDatabase == null) return NotFound();
-            if(transactionDatabase.Status == "Canceled") return BadRequest();
-            if(transactionDatabase.Status == "Awaiting Payment"){
+            if (transactionDatabase == null) return NotFound();
+            if (transactionDatabase.Status == "Canceled") return BadRequest();
+            if (transactionDatabase.Status == "Awaiting Payment")
+            {
                 transactionDatabase.Status = "Payment Approved";
                 _context.Acquisition.Update(transactionDatabase);
                 _context.SaveChanges();
             }
-            else if(transactionDatabase.Status == "Payment Approved"){
+            else if (transactionDatabase.Status == "Payment Approved")
+            {
                 transactionDatabase.Status = "Sent to Carrier";
                 _context.Acquisition.Update(transactionDatabase);
                 _context.SaveChanges();
             }
-            else if(transactionDatabase.Status == "Sent to Carrier"){
+            else if (transactionDatabase.Status == "Sent to Carrier")
+            {
                 transactionDatabase.Status = "Delivered";
                 _context.Acquisition.Update(transactionDatabase);
                 _context.SaveChanges();
             }
             return Ok(transactionDatabase);
+        }
+
+        [HttpDelete("DeletTransaction/{id}")]
+        public IActionResult DeletTransaction(int id){
+            var transactionDatabase = _context.Acquisition.Find(id);
+            if(transactionDatabase == null) return NotFound();
+            _context.Acquisition.Remove(transactionDatabase);
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        [HttpDelete("DeletVendor/{id}")]
+        public IActionResult DeletVendor(int id){
+            var vendorDatabase = _context.Vendor.Find(id);
+            if(vendorDatabase == null) return NotFound();
+            _context.Vendor.Remove(vendorDatabase);
+            _context.SaveChanges();
+            return Ok();
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaymentAPI.Context;
 
@@ -11,9 +12,11 @@ using PaymentAPI.Context;
 namespace payment_API.Migrations
 {
     [DbContext(typeof(PaymentContext))]
-    partial class OrganizadorContextModelSnapshot : ModelSnapshot
+    [Migration("20250515123031_NewTables")]
+    partial class NewTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,12 +39,13 @@ namespace payment_API.Migrations
                     b.Property<string>("Itens")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("VendorInfoId")
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("VendorId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("VendorInfoId");
 
                     b.ToTable("Acquisition");
                 });
@@ -69,15 +73,6 @@ namespace payment_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Vendor");
-                });
-
-            modelBuilder.Entity("PaymentAPI.Models.Acquisition", b =>
-                {
-                    b.HasOne("PaymentAPI.Models.Vendor", "VendorInfo")
-                        .WithMany()
-                        .HasForeignKey("VendorInfoId");
-
-                    b.Navigation("VendorInfo");
                 });
 #pragma warning restore 612, 618
         }

@@ -10,6 +10,7 @@ namespace PaymentAPI.Models
         public int Id { get; set; }
         public string Itens { get; set; }
         public DateTime Date { get; set; }
-        public Vendor VendorInfo { get; set; }
+        public int VendorInfoId { get; set; }
+        public string Status { get; set; }
     }
 }
